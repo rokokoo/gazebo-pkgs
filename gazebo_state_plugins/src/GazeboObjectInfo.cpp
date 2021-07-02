@@ -111,7 +111,7 @@ shape_msgs::SolidPrimitive * GazeboObjectInfo::getSolidPrimitive(physics::Collis
     physics::ShapePtr shape=c->GetShape();
     shape->FillMsg(geom);
     if (geom.has_box()) {
-        //ROS_INFO("shape type %i of collision %s is a box! ", c->GetShapeType(), c->GetName().c_str());
+        // ROS_INFO("shape type %i of collision %s is a box! ", c->GetShapeType(), c->GetName().c_str());
 
         const gazebo::physics::BoxShape * box=dynamic_cast<const physics::BoxShape*>(shape.get());
         if (!box) {
@@ -128,30 +128,32 @@ shape_msgs::SolidPrimitive * GazeboObjectInfo::getSolidPrimitive(physics::Collis
         solid.dimensions[shape_msgs::SolidPrimitive::BOX_X]=GetX(bb);
         solid.dimensions[shape_msgs::SolidPrimitive::BOX_Y]=GetY(bb);
         solid.dimensions[shape_msgs::SolidPrimitive::BOX_Z]=GetZ(bb);
-    }/*else if (geom.has_cylinder()) {
-        ROS_INFO("shape type %i of collision %s is a cylinder! ", c->GetShapeType(), c->GetName().c_str());
+
+    }else if (geom.has_cylinder()) {
+        // ROS_INFO("shape type %i of collision %s is a cylinder! ", c->GetShapeType(), c->GetName().c_str());
         const gazebo::physics::CylinderShape * cyl=dynamic_cast<const physics::CylinderShape*>(shape.get());
         if (!cyl) {
             ROS_ERROR("Dynamic cast failed for cylinder shape");
             return NULL;
         }
         solid.type=shape_msgs::SolidPrimitive::CYLINDER;
+        solid.dimensions.resize(2);
         solid.dimensions[shape_msgs::SolidPrimitive::CYLINDER_HEIGHT]=cyl->GetLength();
         solid.dimensions[shape_msgs::SolidPrimitive::CYLINDER_RADIUS]=cyl->GetRadius();
-    }*/
+    }
     else if (geom.has_sphere())
     {
-        //ROS_INFO("shape type %i of collision %s is a sphere! ", c->GetShapeType(), c->GetName().c_str());
+        // ROS_INFO("shape type %i of collision %s is a sphere! ", c->GetShapeType(), c->GetName().c_str());
 
-        const gazebo::physics::SphereShape * sp
-          = dynamic_cast<const physics::SphereShape*>(shape.get());
+        const gazebo::physics::SphereShape * sp = dynamic_cast<const physics::SphereShape*>(shape.get());
         if (!sp)
         {
-            ROS_ERROR("Dynamic cast failed for cylinder shape");
+            ROS_ERROR("Dynamic cast failed for sphere shape");
             return NULL;
         }
 
         solid.type=shape_msgs::SolidPrimitive::SPHERE;
+        solid.dimensions.resize(1);
         solid.dimensions[shape_msgs::SolidPrimitive::SPHERE_RADIUS] = sp->GetRadius();
     }
     else
